@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    var animalsArr = ['dog', 'chicken', 'lion', 'rabbit', 'alligator', 'quail', 'dragon', 'horse', 'snake', 'hamster'];
+    var animalsArr = ['Koe no Katachi', 'Kimi no na wa', 'Psycho Pass', 'Spice and Wolf', 'Re:Zero kara Hajimeru Isekai Seikatsu', 'No Game No Life', 'Overlord', 'Bakemonogatari', 'Shigatsu wa Kimi no Uso', 'Toradora'];
     for (var i = 0; i < animalsArr.length; i++) {
         var newButton = $('<button>');
         newButton.text(animalsArr[i]);
@@ -9,18 +9,19 @@ $(document).ready(function () {
         $('#buttons').append(newButton);
     }
 
-    //Creates new button based on search term
     $('#search').on('click', function () {
-        var newButton = $('<button>');
-        newButton.text($('#searchterm').val());
-        newButton.attr('data-term', $('#searchterm').val());
-        $('#searchterm').val('');
-        newButton.addClass('button');
-        $('#buttons').append(newButton);
+        event.preventDefault();
+        if ($('#searchterm').val().trim() != '') {
+            var newButton = $('<button>');
+            newButton.text($('#searchterm').val().trim());
+            newButton.attr('data-term', $('#searchterm').val().trim());
+            $('#searchterm').val('');
+            newButton.addClass('button');
+            $('#buttons').append(newButton);
+        }
     })
 
     $(document).on('click', '.button', function () {
-
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
             $(this).attr('data-term') + "&api_key=dc6zaTOxFJmzC&limit=10";
         $.ajax({
@@ -37,15 +38,14 @@ $(document).ready(function () {
                     img.attr('src', response.data[i].images.fixed_height_still.url)
                     img.attr('data-still', response.data[i].images.fixed_height_still.url);
                     img.attr('data-animate', response.data[i].images.fixed_height.url);
-                    newGif.append('<p style="text-align:center;">rating: '+ response.data[i].rating + '</p><br>');
+                    newGif.append('<p style="text-align:center;">rating: ' + response.data[i].rating + '</p><br>');
                     newGif.append(img);
                     $('#gifs').prepend(newGif);
                 }
             })
-
     })
 
-    $(document).on('click', '.gif', function() {
+    $(document).on('click', '.gif', function () {
         if ($(this).attr('data-state') == "still") {
             $(this).attr('data-state', "animate");
             $(this).attr('src', $(this).attr('data-animate'));
